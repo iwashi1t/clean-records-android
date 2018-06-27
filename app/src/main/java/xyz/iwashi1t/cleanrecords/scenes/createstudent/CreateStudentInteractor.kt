@@ -8,7 +8,6 @@ import java.util.UUID
 interface CreateStudentBusinessLogic {
   fun getStudent(request: CreateStudent.GetStudent.Request)
   fun updateStudent(request: CreateStudent.UpdateStudent.Request)
-  fun deleteStudent(request: CreateStudent.DeleteStudent.Request)
 }
 
 interface CreateStudentDataStore {
@@ -50,14 +49,5 @@ class CreateStudentInteractor : CreateStudentBusinessLogic, CreateStudentDataSto
 
     val response = CreateStudent.UpdateStudent.Response()
     presenter.presentUpdateStudent(response)
-  }
-
-  override fun deleteStudent(request: CreateStudent.DeleteStudent.Request) {
-    this.student?.let {
-      studentProvider.deleteStudent(it.studentId)
-    }
-
-    val response = CreateStudent.DeleteStudent.Response()
-    presenter.presentDeleteStudent(response)
   }
 }

@@ -20,4 +20,5 @@
   <string name="message_confirm_delete_student">Are you sure you want to delete "%1$s"?</string>
   <string name="his_total_score">%1$s\'s total score</string>
   <string name="message_error_get_records">Failed to get records.</string>
+  <string name="message_save_success">Save success!</string>
 </resources>

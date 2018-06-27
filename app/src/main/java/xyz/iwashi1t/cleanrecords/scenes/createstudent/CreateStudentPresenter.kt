@@ -5,7 +5,6 @@ import android.view.View
 interface CreateStudentPresentationLogic {
   fun presentStudent(response: CreateStudent.GetStudent.Response)
   fun presentUpdateStudent(response: CreateStudent.UpdateStudent.Response)
-  fun presentDeleteStudent(response: CreateStudent.DeleteStudent.Response)
 }
 
 class CreateStudentPresenter : CreateStudentPresentationLogic {
@@ -31,10 +30,5 @@ class CreateStudentPresenter : CreateStudentPresentationLogic {
   override fun presentUpdateStudent(response: CreateStudent.UpdateStudent.Response) {
     val viewModel = CreateStudent.UpdateStudent.ViewModel()
     fragment.displayUpdateStudent(viewModel)
-  }
-
-  override fun presentDeleteStudent(response: CreateStudent.DeleteStudent.Response) {
-    val viewModel = CreateStudent.DeleteStudent.ViewModel()
-    fragment.displayDeleteStudent(viewModel)
   }
 }

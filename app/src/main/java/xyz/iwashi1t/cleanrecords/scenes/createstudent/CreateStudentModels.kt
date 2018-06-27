@@ -23,12 +23,6 @@ object CreateStudent {
     class ViewModel
   }
 
-  object DeleteStudent {
-    class Request
-    class Response
-    class ViewModel
-  }
-
   data class StudentViewModel(
     val name: String,
     val gender: Gender?

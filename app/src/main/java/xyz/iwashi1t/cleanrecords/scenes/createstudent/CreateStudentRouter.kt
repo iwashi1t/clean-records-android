@@ -1,10 +1,12 @@
 package xyz.iwashi1t.cleanrecords.scenes.createstudent
 
 import xyz.iwashi1t.cleanrecords.R
+import xyz.iwashi1t.cleanrecords.scenes.deletestudent.DeleteStudentDialogFragment
 import xyz.iwashi1t.cleanrecords.scenes.liststudents.ListStudentsFragment
 
 interface CreateStudentRoutingLogic {
   fun routeToListStudents()
+  fun routeToDeleteStudent()
 }
 
 interface CreateStudentDataPassing {
@@ -26,5 +28,13 @@ class CreateStudentRouter: CreateStudentRouterInterface {
       .beginTransaction()
       .replace(R.id.container_main, listStudentsFragment)
       .commit()
+  }
+
+  override fun routeToDeleteStudent() {
+    val student = dataStore.student ?: return
+
+    DeleteStudentDialogFragment().apply {
+      router.dataStore.student = student
+    }.show(fragment.fragmentManager, null)
   }
 }

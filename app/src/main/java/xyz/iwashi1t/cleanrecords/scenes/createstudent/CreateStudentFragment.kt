@@ -20,12 +20,9 @@ import xyz.iwashi1t.cleanrecords.scenes.common.CommonActivityListener
 interface CreateStudentDisplayLogic {
   fun displayStudent(viewModel: CreateStudent.GetStudent.ViewModel)
   fun displayUpdateStudent(viewModel: CreateStudent.UpdateStudent.ViewModel)
-  fun displayDeleteStudent(viewModel: CreateStudent.DeleteStudent.ViewModel)
 }
 
-class CreateStudentFragment : Fragment(), CreateStudentDisplayLogic, CommonActivityListener,
-    CreateStudentDeleteConfirmDialogFragment.Listener {
-
+class CreateStudentFragment : Fragment(), CreateStudentDisplayLogic, CommonActivityListener, CreateStudentSavedDialogFragment.Listener {
   private lateinit var interactor: CreateStudentBusinessLogic
   lateinit var router: CreateStudentRouterInterface
 
@@ -87,8 +84,7 @@ class CreateStudentFragment : Fragment(), CreateStudentDisplayLogic, CommonActiv
   private fun setupViews(view: View) {
     deleteButton = (view.findViewById(R.id.button_delete) as Button).apply {
       setOnClickListener {
-        CreateStudentDeleteConfirmDialogFragment.show(requireFragmentManager(),
-            this@CreateStudentFragment, nameEditText.text.toString())
+        router.routeToDeleteStudent()
       }
       visibility = View.GONE
     }
@@ -148,51 +144,39 @@ class CreateStudentFragment : Fragment(), CreateStudentDisplayLogic, CommonActiv
   }
 
   override fun displayUpdateStudent(viewModel: CreateStudent.UpdateStudent.ViewModel) {
+    CreateStudentSavedDialogFragment.show(requireFragmentManager(), this)
+  }
+
+  // MARK: - CreateStudentSavedDialogFragment.Listener
+
+  override fun onSavedDialogOkClick() {
     router.routeToListStudents()
-  }
-
-  // MARK: - DeleteStudent
-
-  private fun deleteStudent() {
-    val request = CreateStudent.DeleteStudent.Request()
-    interactor.deleteStudent(request)
-  }
-
-  override fun displayDeleteStudent(viewModel: CreateStudent.DeleteStudent.ViewModel) {
-    router.routeToListStudents()
-  }
-
-  // MARK: - CreateStudentDeleteConfirmDialogFragment.Listener
-
-  override fun onDeleteConfirmOkClick() {
-    deleteStudent()
   }
 }
 
-class CreateStudentDeleteConfirmDialogFragment : DialogFragment() {
+class CreateStudentSavedDialogFragment : DialogFragment() {
   interface Listener {
-    fun onDeleteConfirmOkClick()
+    fun onSavedDialogOkClick()
   }
 
-  lateinit var listener: Listener
-  lateinit var name: String
-
   companion object {
-    fun show(fragmentManager: FragmentManager, listener: Listener, name: String) {
-      CreateStudentDeleteConfirmDialogFragment().apply {
+    fun show(fragmentManager: FragmentManager, listener: Listener) {
+      CreateStudentSavedDialogFragment().apply {
         this.listener = listener
-        this.name = name
-      }.show(fragmentManager, this::class.java.name)
+      }.show(fragmentManager, null)
     }
   }
 
+  private lateinit var listener: Listener
+
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    isCancelable = false
+
     return AlertDialog.Builder(requireContext())
-      .setMessage(getString(R.string.message_confirm_delete_student, name))
-      .setPositiveButton(R.string.ok, { _, _ ->
-        listener.onDeleteConfirmOkClick()
-      })
-      .setNegativeButton(R.string.cancel, null)
+      .setMessage(R.string.message_save_success)
+      .setPositiveButton(R.string.ok) { _, _ ->
+        listener.onSavedDialogOkClick()
+      }
       .create()
   }
 }
